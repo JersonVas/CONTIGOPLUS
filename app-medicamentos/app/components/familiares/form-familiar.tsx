@@ -90,7 +90,7 @@ familiares/save`, {
 
     if (id && !isNaN(Number.parseInt(id))) {
       setLoading(true);
-      fetch(``${process.env.NEXT_PUBLIC_API_URL}/familiares/single/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/single/${id}`)
         .then(res => res.json())
         .then(data => setSingle(data))
         .finally(()=>{
@@ -240,4 +240,5 @@ familiares/save`, {
     </main>
   );
 }
+
 
