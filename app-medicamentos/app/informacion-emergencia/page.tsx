@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 
 export default function InformacionEmergencia() {
   useEffect(() => {
-    fetch("http://localhost:4000/familiares")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares`)
       .then((res) => res.json())
       .then((data) => asignarFamiliares(data))
       .catch((err) => console.error("Error al cargar familiares:", err));
@@ -34,7 +34,7 @@ export default function InformacionEmergencia() {
   };
 
   const getInforFamiliar = async (id:any) => {
-    const res = await fetch(`http://localhost:4000/familiares/single/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/single/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -81,3 +81,4 @@ export default function InformacionEmergencia() {
   );
 
 }
+
