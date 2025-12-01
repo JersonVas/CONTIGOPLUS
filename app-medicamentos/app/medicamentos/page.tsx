@@ -4,13 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { format } from 'date-fns';
 
-import CardMedicamentos from "../components/medicamentos/card-medicamentos";
+import CardMedicamentos from "../componentes/medicamentos/card-medicamentos";
 
 export default function MedicamentosPage() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos`)
+    // Asegúrate de que esta URL apunte al puerto 4001 si el backend está ahí
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001'}/medicamentos`)
       .then((res) => res.json())
       .then((data) => mostrarRegistros(data))
       .catch((err) => console.error("Error al cargar medicamentos:", err));
@@ -21,6 +22,8 @@ export default function MedicamentosPage() {
       data.map((e: any) => {
         return {
           ...e,
+          // Utilizamos el campo 'id_medicamento' tal como viene de la BD
+          id: e.id_medicamento, 
           fecha_registro: e.fecha_registro ? format(new Date(e.fecha_registro), "dd/MM/yyyy") : "",
         };
       })
@@ -41,16 +44,19 @@ export default function MedicamentosPage() {
         </a>
       </div>
 
+      {/* AQUÍ ESTÁ EL GRID QUE HACE QUE SE VEA MODERNO */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.map((e, index) => (
           <CardMedicamentos 
              key={index}
-              // ✅ AÑADIDO: Pasamos el objeto completo del familiar
+              // ✅ AÑADIDO: Pasamos la ID del medicamento
+              id_medicamento={e.id_medicamento}
+              // ✅ CONFIRMADO: Pasamos el objeto familiar
               familiar={e.familiar} 
-             nombre={e.nombre}
+             nombre={e.nombre_medicamento || e.nombre} // Usar nombre_medicamento o nombre
              dosis={e.dosis}
              frecuencia={e.frecuencia}
-             duracion={e.duracion}
+             duracion={e.duracion_tratamiento || e.duracion} // Usar duracion_tratamiento o duracion
           />
         ))}
       </div>
