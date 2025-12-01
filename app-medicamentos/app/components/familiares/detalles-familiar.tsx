@@ -16,8 +16,12 @@ export default function CardFamiliar({ fam }: any) {
             </div>
             <div className="detalles-familiar">
               <p>Parentesco: {fam.parentesco}</p> <hr />
-              <p>F. nacimiento: {format(new Date(fam.fecha_nacimiento), "dd-MM-yyyy")}</p> <hr />
-              <p>Celular: {fam.celular}</p> <hr />
+              {/* Nos aseguramos de que la fecha sea válida antes de formatear */}
+              <p>F. nacimiento: {fam.fecha_nacimiento ? format(new Date(fam.fecha_nacimiento), "dd-MM-yyyy") : "Sin fecha"}</p> <hr />
+              
+              {/* CORRECCIÓN: Cambiamos fam.celular por fam.telefono */}
+              <p>Celular: {fam.telefono}</p> <hr />
+              
               <p>Correo: {fam.correo}</p>
             </div>
           </div>
