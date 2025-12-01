@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { format } from 'date-fns';
 
-import CardMedicamentos from "../componentes/medicamentos/card-medicamentos";
+import CardMedicamentos from "../components/medicamentos/card-medicamentos";
 
 export default function MedicamentosPage() {
   const [data, setData] = useState<any[]>([]);
