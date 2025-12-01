@@ -169,7 +169,7 @@ export default function FormMedicamentos({ id }: any) {
             </div>
           </div>
           <div className="container-group">
-            <label> Duración </label>
+            <label> Duración (en días)</label>
             <div className="container-input">
               <input
                 type="text"
@@ -202,4 +202,5 @@ export default function FormMedicamentos({ id }: any) {
     </main>
   );
 }
+
 
