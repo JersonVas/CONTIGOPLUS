@@ -3,7 +3,7 @@ const cors = require('cors');
 
 const pool = require('./db');
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json()); 
@@ -281,4 +281,5 @@ app.get('/historial', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
+
 });
