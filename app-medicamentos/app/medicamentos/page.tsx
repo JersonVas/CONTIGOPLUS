@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 export default function Medicamentos() {
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:4000/medicamentos")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos`)
       .then((res) => res.json())
       .then((data) => mostrarRegistros(data))
       .catch((err) => console.error("Error al cargar medicamentos:", err));
@@ -40,3 +40,4 @@ export default function Medicamentos() {
   );
 
 }
+
