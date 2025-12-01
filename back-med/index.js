@@ -383,6 +383,16 @@ app.get('/historial', async (req, res) => {
     res.status(500).send("Error en la consulta");
   }
 });
+// Fragmento de index.js
+app.post('/familiares/save', async (req, res) => {
+    // ... lógica de validación
+    try {
+        // ... consulta SQL
+    } catch (err) {
+        console.error(err); // <-- ESTO es lo que necesitamos ver
+        res.status(500).send('Error al insertar');
+    }
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
