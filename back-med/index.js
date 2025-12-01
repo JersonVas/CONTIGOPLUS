@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 
 const pool = require('./db');
+// 💥 CAMBIO A PUERTO 4001 para evitar conflictos (si no se define PORT)
+const PORT = process.env.PORT || 4001; 
+
 const app = express();
-const PORT = process.env.PORT || 4000;
+
 
 app.use(cors());
 app.use(express.json()); 
