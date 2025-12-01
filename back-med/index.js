@@ -1,13 +1,36 @@
 const express = require('express');
 const cors = require('cors');
 
-const pool = require('./db');
+const pool = require('./db'); // Importa la conexión Pool
 // 💥 PUERTO 4001 DEFINIDO
 const PORT = process.env.PORT || 4001; 
 
 const app = express();
 
+// ==========================================
+// 🎯 PRUEBA DE CONEXIÓN A BASE DE DATOS (AGREGADO)
+// ==========================================
 
+async function testDBConnection() {
+    try {
+        // Ejecuta una consulta simple para verificar que la conexión está viva
+        const res = await pool.query('SELECT NOW()'); 
+        console.log('✅ CONEXIÓN EXITOSA: La Base de Datos PostgreSQL está activa.');
+        // Puedes imprimir la hora del servidor DB si quieres más detalles
+        // console.log('Hora del servidor DB:', res.rows[0].now); 
+    } catch (err) {
+        // Si hay un error, lo registramos claramente en la consola
+        console.error('❌ ERROR DE CONEXIÓN A DB: No se pudo conectar a PostgreSQL.', err.message);
+        // Opcionalmente, puedes decidir si detener la aplicación si la conexión a DB es crítica
+        // process.exit(1);
+    }
+}
+// Llama a la función de prueba inmediatamente
+testDBConnection();
+
+// ==========================================
+// CONFIGURACIÓN DE EXPRESS
+// ==========================================
 app.use(cors());
 app.use(express.json()); 
 
