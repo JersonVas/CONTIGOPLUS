@@ -37,7 +37,7 @@ export default function FormMedicamentos({ id }: any) {
   };
   const guardarRegistro = async () => {
     setLoading(true);
-    const res = await fetch("http://localhost:4000/medicamentos/save", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function FormMedicamentos({ id }: any) {
   };
   const actualizarRegistro = async () => {
     setLoading(true);
-    const res = await fetch(`http://localhost:4000/medicamentos/edit/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos/edit/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -76,14 +76,14 @@ export default function FormMedicamentos({ id }: any) {
   useEffect(() => {
     if (id && !isNaN(Number.parseInt(id))) {
       setLoading(true);
-      fetch(`http://localhost:4000/medicamentos/single/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos/single/${id}`)
         .then((res) => res.json())
         .then((data) => setSingle(data))
         .finally(()=>{
           setLoading(false);
         })
     }
-    fetch("http://localhost:4000/familiares")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares`)
       .then((res) => res.json())
       .then((data) => asignarFamiliares(data))
       .catch((err) => console.error("Error al cargar familiares:", err));
@@ -202,3 +202,4 @@ export default function FormMedicamentos({ id }: any) {
     </main>
   );
 }
+
