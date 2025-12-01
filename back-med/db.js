@@ -1,11 +1,22 @@
 const { Pool } = require('pg');
 
-// En la nube usaremos DATABASE_URL. En local, usaremos tus credenciales fijas.
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:root@localhost:5432/medicamentos';
-
 const pool = new Pool({
-  connectionString: connectionString,
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+  connectionString: process.env.DATABASE_URL, // Railway suele dar esta variable que incluye todo junto
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
+
+// Opción B: Si prefieres usar las variables separadas (también funciona):
+/*
+const pool = new Pool({
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
+  ssl: { rejectUnauthorized: false }
+});
+*/
 
 module.exports = pool;
