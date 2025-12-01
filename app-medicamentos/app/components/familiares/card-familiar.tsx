@@ -1,45 +1,60 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faPlus, faEye} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+// Nota: faPlus no se usaba aquí, lo he quitado para limpiar
+
 export default function CardFamiliar({ fam }: any) {
-  const eliminarFamiliar = async (data: Number) => {
-    var a = confirm("¿Eliminar familiar?");
-    if (a) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/delete` + data , {
+  
+  const eliminarFamiliar = async (id: number) => {
+    // Confirmación más segura
+    const confirmar = window.confirm(`¿Estás seguro de eliminar a ${fam.nombre}?`);
+    
+    if (confirmar) {
+      // CORRECCIÓN AQUÍ: Agregamos el '/' antes del ID
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/delete/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(res);
+
       if (res.ok) {
-        const data = await res.json();
-        alert("Registro eliminado")
-        location.reload()
+        alert("Familiar eliminado correctamente");
+        window.location.reload(); // Recargar para ver los cambios
       } else {
-        console.error("Error al enviar datos");
+        console.error("Error al eliminar");
+        alert("Hubo un error al intentar eliminar.");
       }
     }
   };
+
   return (
     <div className="card">
       <div className="card-text">
-        <label htmlFor=""> {fam.nombre} </label>
+        <label> {fam.nombre} {fam.apellido} </label>
         <p>
           {fam.parentesco} - {fam.fecha_nacimiento}
         </p>
       </div>
       <div className="card-actions">
-        <a href={`familiares/detalles/${fam.id_familiar}`}>
-          <FontAwesomeIcon icon={faEye} size="lg" />
+        {/* Botón Ver Detalles */}
+        <a href={`familiares/detalles/${fam.id_familiar}`} title="Ver Detalles">
+          <FontAwesomeIcon icon={faEye} size="lg" className="text-blue-500 hover:text-blue-700" />
         </a>
-        <a href={`familiares/nuevo/${fam.id_familiar}`}>
-          <FontAwesomeIcon icon={faEdit} size="lg" />
+        
+        {/* Botón Editar */}
+        <a href={`familiares/nuevo/${fam.id_familiar}`} title="Editar">
+          <FontAwesomeIcon icon={faEdit} size="lg" className="text-green-500 hover:text-green-700" />
         </a>
-        <a onClick={() => eliminarFamiliar(fam.id_familiar)}>
-          <FontAwesomeIcon icon={faTrash} size="lg" />
-        </a>
+        
+        {/* Botón Eliminar (Corregido) */}
+        <button 
+          onClick={() => eliminarFamiliar(fam.id_familiar)} 
+          title="Eliminar"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          <FontAwesomeIcon icon={faTrash} size="lg" className="text-red-500 hover:text-red-700" />
+        </button>
       </div>
     </div>
   );
 }
-
