@@ -1,14 +1,14 @@
 const { Pool } = require('pg');
 
-// HOST INTERNO DE RAILWAY:
-// Este host se resuelve correctamente DENTRO de un Codespace o un servicio de Railway.
-const INTERNAL_DB_HOST = 'postgres.railway.internal'; 
-const STANDARD_PG_PORT = 5432; // Puerto estándar de PostgreSQL
+// Railway y otros entornos suelen definir PGHOST con la dirección interna
+// (ej. 'postgres.railway.internal' o un nombre de servicio).
+const DB_HOST = process.env.PGHOST || 'localhost'; // Usamos PGHOST si existe, si no, 'localhost'
+const STANDARD_PG_PORT = process.env.PGPORT || 5432; // Usamos PGPORT si existe, si no, 5432
 
 const pool = new Pool({
-  // Se usa el host interno para evitar el error ENOTFOUND.
+  // Se usa la variable de entorno PGHOST para mayor robustez.
   user: process.env.PGUSER,
-  host: INTERNAL_DB_HOST, 
+  host: DB_HOST, 
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD,
   port: STANDARD_PG_PORT,
@@ -17,13 +17,9 @@ const pool = new Pool({
   }
 });
 
-/* // Configuración anterior que causaba el error ENOTFOUND:
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, 
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+/* // Configuraciones anteriores (mantenidas como referencia):
+// 1. connectionString: process.env.DATABASE_URL (falló por host externo)
+// 2. host: 'postgres.railway.internal' (falló por ENOTFOUND, lo que sugiere que la variable PGHOST es la correcta en este entorno)
 */
 
 module.exports = pool;
