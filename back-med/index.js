@@ -101,8 +101,31 @@ app.delete('/familiares/delete/:id', async (req, res) => {
 // ==========================================
 app.get('/medicamentos', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM medicamentos');
-    res.json(result.rows);
+    // 💥 CAMBIO CRUCIAL: Usamos un JOIN para obtener el nombre del familiar
+    const query = `
+      SELECT 
+        m.*,
+        f.nombre AS nombre_familiar,
+        f.id_familiar AS id_familiar_fk
+      FROM 
+        medicamentos m
+      LEFT JOIN 
+        familiares f ON m.id_familiar = f.id_familiar
+    `;
+    const result = await pool.query(query);
+
+    // Mapeamos los resultados para crear el objeto 'familiar' esperado por el frontend
+    const medicamentosConFamiliar = result.rows.map(m => ({
+        // Copia todas las propiedades del medicamento (m.nombre_medicamento, dosis, etc.)
+        ...m,
+        // Creamos el objeto 'familiar' que el frontend espera
+        familiar: m.id_familiar_fk ? {
+            id: m.id_familiar_fk,
+            nombre: m.nombre_familiar
+        } : null
+    }));
+
+    res.json(medicamentosConFamiliar);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error en la consulta');
@@ -112,6 +135,7 @@ app.get('/medicamentos', async (req, res) => {
 app.get('/medicamentos/single/:id', async (req, res) => {
   const { id } = req.params;
   try {
+    // Nota: Esta consulta simple aún no incluye el JOIN
     const result = await pool.query(
       'SELECT * FROM medicamentos WHERE id_medicamento = $1',
       [id]
@@ -149,7 +173,7 @@ app.put('/medicamentos/edit/:id', async (req, res) => {
   try {
     const today = new Date();
     const result = await pool.query(
-      'UPDATE medicamentos SET id_familiar = $1, nombre_medicamento = $2, dosis = $3, frecuencia = $4 , duracion_tratamiento = $5, fecha_registro = $6  WHERE id_medicamento = $7 RETURNING *',
+      'UPDATE medicamentos SET id_familiar = $1, nombre_medicamento = $2, dosis = $3, frecuencia = $4 , duracion_tratamiento = $5, fecha_registro = $6  WHERE id_medicamento = $7 RETURNING *',
       [id_familiar,nombre_medicamento,dosis,frecuencia,duracion_tratamiento, today, id]
     );
 
