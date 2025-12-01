@@ -8,7 +8,7 @@ export default function DetalleFamiliar() {
   const [familiar, setFamiliar] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:4000/familiares/single/" + id)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/single/` + id)
       .then((res) => res.json())
       .then((data) => setFamiliar(data))
       .catch((err) => console.error("Error al cargar familiares:", err));
@@ -20,3 +20,4 @@ export default function DetalleFamiliar() {
     </main>
   );
 }
+
