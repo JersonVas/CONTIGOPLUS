@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Button, CircularProgress } from "@mui/material";
 
-
 export default function FormFamiliar({ id }: any) {
   const [loading, setLoading] = useState(false);
+  // CORRECCIÓN 1: Cambiamos 'celular' por 'telefono' para coincidir con la Base de Datos
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -16,7 +16,7 @@ export default function FormFamiliar({ id }: any) {
     infor_emergencia_alergias: "",
     infor_emergencia_condiciones: "",
     correo: "",
-    celular: "",
+    telefono: "", 
   });
 
   const handleChange = (e: any) => {
@@ -35,21 +35,22 @@ export default function FormFamiliar({ id }: any) {
       guardarRegistro();
     }
   };
+
   const setSingle = (data: any) => {
+    // CORRECCIÓN 2: Quitamos el correo: '' y telefono: '' para que NO se borren al editar
     setFormData({
       ...data,
-      infor_emergencia_tipo_sangre: '',
-      infor_emergencia_alergias: '',
-      infor_emergencia_condiciones: '',
-      correo: '',
-      celular: '',
+      infor_emergencia_tipo_sangre: data.infor_emergencia_tipo_sangre || '',
+      infor_emergencia_alergias: data.infor_emergencia_alergias || '',
+      infor_emergencia_condiciones: data.infor_emergencia_condiciones || '',
       fecha_nacimiento: format(new Date(data.fecha_nacimiento), "yyyy-MM-dd"),
     });
   };
+
   const guardarRegistro = async () => {
     setLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/
-familiares/save`, {
+    // Nota: Eliminé el salto de línea en la URL que podía causar error
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,13 +60,15 @@ familiares/save`, {
     console.log(res);
     if (res.ok) {
       const data = await res.json();
-      alert("Registro actualizado")
-      location.reload()
+      alert("Registro guardado con éxito");
+      window.location.href = "/familiares"; // Redirigir a la lista
     } else {
       console.error("Error al enviar datos");
+      alert("Error al guardar");
     }
     setLoading(false);
   };
+
   const actualizarRegistro = async () => {
     setLoading(true);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/edit/${id}`, {
@@ -78,26 +81,27 @@ familiares/save`, {
     console.log(res);
     if (res.ok) {
       const data = await res.json();
-      alert("Registro actualizado")
-      location.reload()
+      alert("Registro actualizado");
+      window.location.href = "/familiares";
     } else {
       console.error("Error al actualizar");
+      alert("Error al actualizar");
     }
     setLoading(false);
-
   };
-  useEffect(() => {
 
+  useEffect(() => {
     if (id && !isNaN(Number.parseInt(id))) {
       setLoading(true);
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/single/${id}`)
         .then(res => res.json())
         .then(data => setSingle(data))
-        .finally(()=>{
+        .finally(() => {
           setLoading(false);
         })
     }
   }, [id]);
+
   return (
     <main className="section-main">
       <h5> Familiares </h5>
@@ -181,11 +185,12 @@ familiares/save`, {
             <div className="container-group">
               <label> Número celular </label>
               <div className="container-input">
+                {/* CORRECCIÓN 3: name="telefono" y value={formData.telefono} */}
                 <input
                   type="text"
                   className="form-input"
-                  name="celular"
-                  value={formData.celular}
+                  name="telefono"
+                  value={formData.telefono}
                   onChange={handleChange}
                   required
                 />
@@ -212,20 +217,6 @@ familiares/save`, {
             <span> * </span> Campos obligatorios
           </div>
           <div className="container-button">
-            {/* <button className="btn-cancelar" type="button">
-              Cancelar
-            </button> */}
-            {/* <button className="btn-guardar" disabled>
-              { !loading && (
-                <>
-                <CircularProgress size={12} color="inherit" />
-                <>&nbsp;</>
-                </>
-              )
-              }
-              Guardar 
-            </button> */}
-
             <Button
               type="submit"
               variant="contained"
@@ -240,5 +231,3 @@ familiares/save`, {
     </main>
   );
 }
-
-
