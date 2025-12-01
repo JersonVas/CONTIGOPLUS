@@ -12,7 +12,10 @@ app.get('/', (req, res) => {
   res.send('Conectado');
 });
 
-//FAMILIARES
+// ==========================================
+// FAMILIARES (ACTUALIZADO CON CORREO Y TELEFONO)
+// ==========================================
+
 app.get('/familiares', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM familiares');
@@ -22,6 +25,7 @@ app.get('/familiares', async (req, res) => {
     res.status(500).send('Error en la consulta');
   }
 });
+
 app.get('/familiares/single/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -39,12 +43,14 @@ app.get('/familiares/single/:id', async (req, res) => {
     res.status(500).json({ error: 'Error en la consulta' });
   }
 });
+
+// AQUI ESTA EL CAMBIO IMPORTANTE: Agregamos correo y telefono al INSERT
 app.post('/familiares/save', async (req, res) => {
-  const { nombre, apellido, parentesco, fecha_nacimiento, documento_identidad } = req.body;
+  const { nombre, apellido, parentesco, fecha_nacimiento, documento_identidad, correo, telefono } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO familiares (nombre,apellido,parentesco,fecha_nacimiento,documento_identidad,id_usuario_cuidador) VALUES ($1,$2,$3,$4,$5,0) RETURNING *',
-      [nombre,apellido,parentesco,fecha_nacimiento,documento_identidad]
+      'INSERT INTO familiares (nombre, apellido, parentesco, fecha_nacimiento, documento_identidad, correo, telefono, id_usuario_cuidador) VALUES ($1, $2, $3, $4, $5, $6, $7, 0) RETURNING *',
+      [nombre, apellido, parentesco, fecha_nacimiento, documento_identidad, correo, telefono]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -52,14 +58,16 @@ app.post('/familiares/save', async (req, res) => {
     res.status(500).send('Error al insertar');
   }
 });
+
+// AQUI TAMBIEN: Agregamos correo y telefono al UPDATE
 app.put('/familiares/edit/:id', async (req, res) => {
   const { id } = req.params;
-  const { nombre, apellido, parentesco, fecha_nacimiento, documento_identidad} = req.body;
+  const { nombre, apellido, parentesco, fecha_nacimiento, documento_identidad, correo, telefono } = req.body;
 
   try {
     const result = await pool.query(
-      'UPDATE familiares SET nombre = $1, apellido = $2, parentesco = $3, fecha_nacimiento = $4 , documento_identidad = $5, id_usuario_cuidador = 0  WHERE id_familiar = $6 RETURNING *',
-      [nombre,apellido,parentesco,fecha_nacimiento,documento_identidad, id]
+      'UPDATE familiares SET nombre = $1, apellido = $2, parentesco = $3, fecha_nacimiento = $4, documento_identidad = $5, correo = $6, telefono = $7, id_usuario_cuidador = 0 WHERE id_familiar = $8 RETURNING *',
+      [nombre, apellido, parentesco, fecha_nacimiento, documento_identidad, correo, telefono, id]
     );
 
     if (result.rows.length === 0) {
@@ -71,6 +79,7 @@ app.put('/familiares/edit/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar registro' });
   }
 });
+
 app.delete('/familiares/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -87,7 +96,9 @@ app.delete('/familiares/delete/:id', async (req, res) => {
   }
 });
 
-//MEDICAMENTOS
+// ==========================================
+// MEDICAMENTOS
+// ==========================================
 app.get('/medicamentos', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM medicamentos');
@@ -97,6 +108,7 @@ app.get('/medicamentos', async (req, res) => {
     res.status(500).send('Error en la consulta');
   }
 });
+
 app.get('/medicamentos/single/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -114,6 +126,7 @@ app.get('/medicamentos/single/:id', async (req, res) => {
     res.status(500).json({ error: 'Error en la consulta' });
   }
 });
+
 app.post('/medicamentos/save', async (req, res) => {
   const { id_familiar, nombre_medicamento, dosis, frecuencia, duracion_tratamiento } = req.body;
   try {
@@ -128,6 +141,7 @@ app.post('/medicamentos/save', async (req, res) => {
     res.status(500).send('Error al insertar');
   }
 });
+
 app.put('/medicamentos/edit/:id', async (req, res) => {
   const { id } = req.params;
   const { id_familiar, nombre_medicamento, dosis, frecuencia, duracion_tratamiento } = req.body;
@@ -148,6 +162,7 @@ app.put('/medicamentos/edit/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar registro' });
   }
 });
+
 app.delete('/medicamentos/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -165,7 +180,9 @@ app.delete('/medicamentos/delete/:id', async (req, res) => {
 });
 
 
-//SINTOMAS
+// ==========================================
+// SINTOMAS
+// ==========================================
 app.get('/sintomas', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM sintomas');
@@ -175,6 +192,7 @@ app.get('/sintomas', async (req, res) => {
     res.status(500).send('Error en la consulta');
   }
 });
+
 app.get('/sintomas/single/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -192,6 +210,7 @@ app.get('/sintomas/single/:id', async (req, res) => {
     res.status(500).json({ error: 'Error en la consulta' });
   }
 });
+
 app.post('/sintomas/save', async (req, res) => {
   const { id_familiar, tipo_sintoma, intensidad, fecha_inicio, comentarios } = req.body;
   try {
@@ -205,6 +224,7 @@ app.post('/sintomas/save', async (req, res) => {
     res.status(500).send('Error al insertar');
   }
 });
+
 app.put('/sintomas/edit/:id', async (req, res) => {
   const { id } = req.params;
   const { id_familiar, tipo_sintoma, intensidad, fecha_inicio, comentarios } = req.body;
@@ -223,6 +243,7 @@ app.put('/sintomas/edit/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar registro' });
   }
 });
+
 app.delete('/sintomas/delete/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -240,12 +261,13 @@ app.delete('/sintomas/delete/:id', async (req, res) => {
 });
 
 
-//Historial
+// ==========================================
+// HISTORIAL
+// ==========================================
 app.get('/historial', async (req, res) => {
-
   try {
     const medicamentos = await pool.query(
-      "SELECT nombre_medicamento, dosis, frecuencia, fecha_registros FROM medicamentos"
+      "SELECT nombre_medicamento, dosis, frecuencia, fecha_registro FROM medicamentos"
     );
     const sintomas = await pool.query(
       "SELECT tipo_sintoma, intensidad, comentarios, fecha_inicio FROM sintomas"
@@ -257,7 +279,7 @@ app.get('/historial', async (req, res) => {
       descripcion: m.nombre_medicamento,
       dosis: m.dosis,
       frecuencia: m.frecuencia,
-      fecha: m.fecha_registros,
+      fecha: m.fecha_registro,
     }));
 
     const sint = sintomas.rows.map(s => ({
@@ -281,5 +303,4 @@ app.get('/historial', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
-
 });
