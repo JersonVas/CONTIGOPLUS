@@ -1,17 +1,15 @@
 const { Pool } = require('pg');
 
 // *************************************************************************
-// SOLUCIÓN TEMPORAL: USAR CREDENCIALES CODIFICADAS (Hardcoded)
-// Se usa el host y el puerto INTERNO de Railway para asegurar que la API
-// escriba en la misma DB que Adminer está leyendo.
-// ESTO SOLO ES PARA PRUEBAS LOCALES. Reemplazar por variables de entorno
-// en un ambiente de producción.
+// SOLUCIÓN FINAL: USAR CREDENCIALES CODIFICADAS (Hardcoded)
+// Se usa el host y el puerto PÚBLICO (proxy) de Railway porque es la única
+// configuración que el Codespace pudo resolver con éxito.
 // *************************************************************************
 
 const pool = new Pool({
-  // Host y Puerto Interno (el que usa Adminer):
-  host: 'postgres.railway.internal', 
-  port: 5432, // Puerto interno estándar de PostgreSQL
+  // Host público (proxy) y puerto de tu URL:
+  host: 'tramway.proxy.rlwy.net', 
+  port: 12150, 
   
   // Tus credenciales codificadas:
   user: 'postgres',
@@ -19,14 +17,14 @@ const pool = new Pool({
   database: 'railway',
   
   ssl: {
-      // Necesario para conexiones SSL
+      // Necesario para la conexión a través del proxy
       rejectUnauthorized: false 
   }
 });
 
-/* // Configuración anterior que funcionó para la conexión, pero NO para la sincronización con Adminer:
-// host: 'tramway.proxy.rlwy.net', 
-// port: 12150, 
+/* // Configuración interna que falló con ENOTFOUND:
+// host: 'postgres.railway.internal', 
+// port: 5432, 
 */
 
 module.exports = pool;
