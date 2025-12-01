@@ -4,7 +4,7 @@ export default function CardFamiliar({ fam }: any) {
   const eliminarFamiliar = async (data: Number) => {
     var a = confirm("¿Eliminar familiar?");
     if (a) {
-      const res = await fetch("http://localhost:4000/familiares/delete/" + data , {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/delete` + data , {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -42,3 +42,4 @@ export default function CardFamiliar({ fam }: any) {
     </div>
   );
 }
+
