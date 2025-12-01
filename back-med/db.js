@@ -27,3 +27,5 @@ const pool = new Pool({
 // 1. connectionString: process.env.DATABASE_URL
 // 2. host: process.env.PGHOST || 'postgres.railway.internal' (falló ENOTFOUND)
 */
+
+module.exports = pool;
