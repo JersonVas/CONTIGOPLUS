@@ -4,7 +4,7 @@ export default function CardMedicamentos({ data }: any) {
   const eliminarRegistro = async (id: Number) => {
     var a = confirm("¿Eliminar registro?");
     if (a) {
-      const res = await fetch("http://localhost:4000/medicamentos/delete/" + id , {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medicamentos/delete/` + id , {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -41,3 +41,4 @@ export default function CardMedicamentos({ data }: any) {
     </div>
   );
 }
+
