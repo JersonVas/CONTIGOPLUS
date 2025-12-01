@@ -28,7 +28,7 @@ export default function ContactoEmergencia() {
     });
   };
   const guardarRegistro = async () => {
-    const res = await fetch("http://localhost:4000/usuario/save-emergencia/", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/usuario/save-emergencia/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function ContactoEmergencia() {
   const id = "1";
   useEffect(() => {
     if (id && !isNaN(Number.parseInt(id))) {
-      fetch(`http://localhost:4000/usuario/get-single/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/usuario/get-single/${id}`)
         .then(res => res.json())
         .then(data => setSingle(data));
     }
@@ -98,3 +98,4 @@ export default function ContactoEmergencia() {
     </main>
   );
 }
+
