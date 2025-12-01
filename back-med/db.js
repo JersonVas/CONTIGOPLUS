@@ -1,25 +1,29 @@
 const { Pool } = require('pg');
 
-// Railway y otros entornos suelen definir PGHOST con la dirección interna
-// (ej. 'postgres.railway.internal' o un nombre de servicio).
-const DB_HOST = process.env.PGHOST || 'localhost'; // Usamos PGHOST si existe, si no, 'localhost'
-const STANDARD_PG_PORT = process.env.PGPORT || 5432; // Usamos PGPORT si existe, si no, 5432
+// *************************************************************************
+// SOLUCIÓN TEMPORAL: USAR CREDENCIALES CODIFICADAS (Hardcoded)
+// Se usa el host y el puerto PÚBLICO (proxy) de Railway ya que el host 
+// interno 'postgres.railway.internal' falló con ENOTFOUND.
+// ESTO SOLO ES PARA PRUEBAS LOCALES Y DEBE REEMPLAZARSE POR VARIABLES DE ENTORNO 
+// EN UN AMBIENTE DE PRODUCCIÓN.
+// *************************************************************************
 
 const pool = new Pool({
-  // Se usa la variable de entorno PGHOST para mayor robustez.
-  user: process.env.PGUSER,
-  host: DB_HOST, 
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: STANDARD_PG_PORT,
+  // Host público (proxy) y puerto de tu URL:
+  host: 'tramway.proxy.rlwy.net', 
+  port: 12150, 
+  
+  // Tus credenciales codificadas:
+  user: 'postgres',
+  password: 'hctayqWJIgKcYYTHlBPSYFCOrjVnDaFJ',
+  database: 'railway',
+  
   ssl: {
-      rejectUnauthorized: false // Necesario para conexiones SSL de Railway
+      rejectUnauthorized: false // Necesario para la conexión a través del proxy
   }
 });
 
 /* // Configuraciones anteriores (mantenidas como referencia):
-// 1. connectionString: process.env.DATABASE_URL (falló por host externo)
-// 2. host: 'postgres.railway.internal' (falló por ENOTFOUND, lo que sugiere que la variable PGHOST es la correcta en este entorno)
+// 1. connectionString: process.env.DATABASE_URL
+// 2. host: process.env.PGHOST || 'postgres.railway.internal' (falló ENOTFOUND)
 */
-
-module.exports = pool;
