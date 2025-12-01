@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+ultimport { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Chip from '@mui/material/Chip';
 export default function CardSintomas({ data }: any) {
@@ -31,7 +31,7 @@ export default function CardSintomas({ data }: any) {
       case 'severo':
         return 'error';
       default:
-        return '';
+        return 'default';
     }
   }
 
@@ -57,3 +57,4 @@ export default function CardSintomas({ data }: any) {
     </div>
   );
 }
+
