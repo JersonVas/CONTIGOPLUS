@@ -48,7 +48,8 @@ export default function FormFamiliar({ id }: any) {
   };
   const guardarRegistro = async () => {
     setLoading(true);
-    const res = await fetch("http://localhost:4000/familiares/save", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/
+familiares/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +68,7 @@ export default function FormFamiliar({ id }: any) {
   };
   const actualizarRegistro = async () => {
     setLoading(true);
-    const res = await fetch(`http://localhost:4000/familiares/edit/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/familiares/edit/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +90,7 @@ export default function FormFamiliar({ id }: any) {
 
     if (id && !isNaN(Number.parseInt(id))) {
       setLoading(true);
-      fetch(`http://localhost:4000/familiares/single/${id}`)
+      fetch(``${process.env.NEXT_PUBLIC_API_URL}/familiares/single/${id}`)
         .then(res => res.json())
         .then(data => setSingle(data))
         .finally(()=>{
@@ -239,3 +240,4 @@ export default function FormFamiliar({ id }: any) {
     </main>
   );
 }
+
